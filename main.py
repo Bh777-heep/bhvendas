@@ -13,8 +13,8 @@ from pystyle import Colors, Colorate
 
 from noelcpm import CPMnoelcpm
 
-__CHANNEL_USERNAME__ = "bh_vendas"
-__GROUP_USERNAME__   = " 67 99187-0782"
+__CHANNEL_USERNAME__ = "@noel_vendas"
+__GROUP_USERNAME__   = "11978458163"
 
 def signal_handler(sig, frame):
     print("\n Bye Bye...")
@@ -39,7 +39,7 @@ def gradient_text(text, colors):
 
 def banner(console):
     os.system('cls' if os.name == 'nt' else 'clear')
-    brand_name =  "ATENCAO PARA USAR A FERRAMENTA E NECESSARIO ADICIONAR CREDITOS COM O BHVENDAS."
+    brand_name =  "ATENCAO PARA USAR A FERRAMENTA E NECESSARIO ADICIONAR CREDITOS COM O ADM NOEL VENDAS."
     colors = [
         "rgb(255,0,0)", "rgb(255,69,0)", "rgb(255,140,0)", "rgb(255,215,0)", "rgb(173,255,47)", 
         "rgb(0,255,0)", "rgb(0,255,255)", "rgb(0,191,255)", "rgb(0,0,255)", "rgb(139,0,255)",
@@ -335,4 +335,4 @@ if __name__ == "__main__":
                     print(Colorate.Horizontal(Colors.rainbow, 'TENTE NOVAMENTE.'))
                     sleep(2)
                     continue
-            elif service == 8: # Account
+            elif service == 8: # A

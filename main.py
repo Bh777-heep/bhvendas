@@ -1,8 +1,5 @@
 #!/usr/bin/python
 
-# ========================================
-# Importações de Bibliotecas
-# ========================================
 import random
 import requests
 from time import sleep
@@ -14,47 +11,25 @@ from rich.style import Style
 import pystyle
 from pystyle import Colors, Colorate
 
-# Importação do módulo personalizado para interação com o CPM
 from noelcpm import CPMnoelcpm
 
-# ========================================
-# Configurações e Constantes
-# ========================================
-__CHANNEL_USERNAME__ = "bh_vendas"  # Nome do canal no Instagram
-__GROUP_USERNAME__   = "67 99187-0782"  # Número do WhatsApp para contato
+__CHANNEL_USERNAME__ = "bh_vendas"
+__GROUP_USERNAME__   = " 67 99187-0782"
 
-# ========================================
-# Manipulador de Sinais para saída limpa
-# ========================================
 def signal_handler(sig, frame):
-    """Função chamada quando o usuário pressiona Ctrl+C para sair"""
-    print("\nSaindo... Até mais!")
+    print("\n Bye Bye...")
     sys.exit(0)
 
-# ========================================
-# Utilitários de Texto e Cores
-# ========================================
 def gradient_text(text, colors):
-    """
-    Cria um efeito de gradiente no texto usando múltiplas cores
-    Args:
-        text: Texto a ser colorido
-        colors: Lista de cores no formato RGB
-    Returns:
-        Texto formatado com o gradiente
-    """
     lines = text.splitlines()
     height = len(lines)
     width = max(len(line) for line in lines)
     colorful_text = Text()
-    
     for y, line in enumerate(lines):
         for x, char in enumerate(line):
             if char != ' ':
-                # Calcula o índice da cor baseado na posição do caractere
-                color_index = int(((x / (width - 1 if width > 1 else 1)) + 
-                                 (y / (height - 1 if height > 1 else 1))) * 0.5 * (len(colors) - 1))
-                color_index = min(max(color_index, 0), len(colors) - 1)
+                color_index = int(((x / (width - 1 if width > 1 else 1)) + (y / (height - 1 if height > 1 else 1))) * 0.5 * (len(colors) - 1))
+                color_index = min(max(color_index, 0), len(colors) - 1)  # Ensure the index is within bounds
                 style = Style(color=colors[color_index])
                 colorful_text.append(char, style=style)
             else:
@@ -62,374 +37,302 @@ def gradient_text(text, colors):
         colorful_text.append("\n")
     return colorful_text
 
+def banner(console):
+    os.system('cls' if os.name == 'nt' else 'clear')
+    brand_name =  "ATENCAO PARA USAR A FERRAMENTA E NECESSARIO ADICIONAR CREDITOS COM O BHVENDAS."
+    colors = [
+        "rgb(255,0,0)", "rgb(255,69,0)", "rgb(255,140,0)", "rgb(255,215,0)", "rgb(173,255,47)", 
+        "rgb(0,255,0)", "rgb(0,255,255)", "rgb(0,191,255)", "rgb(0,0,255)", "rgb(139,0,255)",
+        "rgb(255,0,255)"
+    ]
+    colorful_text = gradient_text(brand_name, colors)
+    console.print(colorful_text)
+    print(Colorate.Horizontal(Colors.rainbow, '=================================================================='))
+    print(Colorate.Horizontal(Colors.rainbow, '\t         𝐅𝐀𝐂𝐀 𝐋𝐎𝐆𝐎𝐔𝐓 𝐃𝐎 𝐂𝐏𝐌 𝐀𝐍𝐓𝐄𝐒 𝐃𝐄 𝐔𝐒𝐀𝐑 𝐄𝐒𝐓𝐀 𝐅𝐄𝐑𝐑𝐀𝐌𝐄𝐍𝐓𝐀'))
+    print(Colorate.Horizontal(Colors.rainbow, '    𝐂𝐎𝐌𝐏𝐀𝐑𝐓𝐈𝐋𝐇𝐀𝐑 𝐀 𝐂𝐇𝐀𝐕𝐄 𝐃𝐄 𝐀𝐂𝐄𝐒𝐒𝐎 𝐍𝐀𝐎 𝐄 𝐏𝐄𝐑𝐌𝐈𝐓𝐈𝐃𝐎 𝐒𝐄𝐑𝐀 𝐁𝐋𝐎𝐐𝐔𝐄𝐀𝐃𝐎'))
+    print(Colorate.Horizontal(Colors.rainbow, f' ‌           INSTAGRAM: @{__CHANNEL_USERNAME__} WHATSAPP @{__GROUP_USERNAME__}'))
+    print(Colorate.Horizontal(Colors.rainbow, '=================================================================='))
+
+def load_player_data(cpm):
+    response = cpm.get_player_data()
+    if response.get('ok'):
+        data = response.get('data')
+        if 'floats' in data and 'localID' in data and 'money' in data and 'coin' in data:
+        
+            print(Colorate.Horizontal(Colors.rainbow, '==========[ INFORMACOES DO JOGADOR]=========='))
+            
+            print(Colorate.Horizontal(Colors.rainbow, f'NOME   : {(data.get("Name") if "Name" in data else "UNDEFINED")}.'))
+                
+            print(Colorate.Horizontal(Colors.rainbow, f'SEU ID NO JOGO: {data.get("localID")}.'))
+            
+            print(Colorate.Horizontal(Colors.rainbow, f'DINHEIRO  : {data.get("money")}.'))
+            
+            print(Colorate.Horizontal(Colors.rainbow, f'GOLDS : {data.get("coin")}.'))
+            
+        else:
+            print(Colorate.Horizontal(Colors.rainbow, '! ERROR: new accounts most be signed-in to the game at least once !.'))
+            exit(1)
+    else:
+        print(Colorate.Horizontal(Colors.rainbow, '! ERROR: seems like your login is not properly set !.'))
+        exit(1)
+
+
+def load_key_data(cpm):
+
+    data = cpm.get_key_data()
+    
+    print(Colorate.Horizontal(Colors.rainbow, '========[ 𝐃𝐄𝐓𝐀𝐋𝐇𝐄𝐒 𝐃𝐀 𝐂𝐇𝐀𝐕𝐄 𝐃𝐄 𝐀𝐂𝐄𝐒𝐒𝐎]========'))
+    
+    print(Colorate.Horizontal(Colors.rainbow, f'CHAVE DE ACESSO : {data.get("access_key")}.'))
+    
+    print(Colorate.Horizontal(Colors.rainbow, f'ID DO TELEGRAM: {data.get("telegram_id")}.'))
+    
+    print(Colorate.Horizontal(Colors.rainbow, f'SEU SALDO $  : {(data.get("coins") if not data.get("is_unlimited") else "ilimitado")}.'))
+        
+    
+
+def prompt_valid_value(content, tag, password=False):
+    while True:
+        value = Prompt.ask(content, password=password)
+        if not value or value.isspace():
+            print(Colorate.Horizontal(Colors.rainbow, f'{tag} cannot be empty or just spaces. Please try again.'))
+        else:
+            return value
+            
+def load_client_details():
+    response = requests.get("http://ip-api.com/json")
+    data = response.json()
+    print(Colorate.Horizontal(Colors.rainbow, '=============[ 𝙇𝙤𝙘𝙖𝙡𝙞𝙯𝙖𝙘𝙖𝙤 ]============='))
+    print(Colorate.Horizontal(Colors.rainbow, f'ENDERECO IP : {data.get("query")}.'))
+    print(Colorate.Horizontal(Colors.rainbow, f'CIDADE  : {data.get("city")} {data.get("regionName")} {data.get("countryCode")}.'))
+    print(Colorate.Horizontal(Colors.rainbow, f'PAIS  : {data.get("country")} {data.get("zip")}.'))
+    print(Colorate.Horizontal(Colors.rainbow, '===============[ 𝐌𝐄𝐍𝐔 ]==============='))
+
 def interpolate_color(start_color, end_color, fraction):
-    """
-    Interpola entre duas cores hexadecimais
-    Args:
-        start_color: Cor inicial (hex)
-        end_color: Cor final (hex)
-        fraction: Fração da interpolação (0 a 1)
-    Returns:
-        Cor interpolada (string hex)
-    """
     start_rgb = tuple(int(start_color[i:i+2], 16) for i in (1, 3, 5))
     end_rgb = tuple(int(end_color[i:i+2], 16) for i in (1, 3, 5))
     interpolated_rgb = tuple(int(start + fraction * (end - start)) for start, end in zip(start_rgb, end_rgb))
-    return "#{:02x}{:02x}{:02x}".format(*interpolated_rgb)
+    return "{:02x}{:02x}{:02x}".format(*interpolated_rgb)
 
 def rainbow_gradient_string(customer_name):
-    """
-    Cria um efeito arco-íris no texto
-    Args:
-        customer_name: Texto a ser formatado
-    Returns:
-        String com códigos de cores para efeito arco-íris
-    """
     modified_string = ""
     num_chars = len(customer_name)
-    # Gera cores aleatórias para início e fim do gradiente
-    start_color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
-    end_color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
-    
+    start_color = "{:06x}".format(random.randint(0, 0xFFFFFF))
+    end_color = "{:06x}".format(random.randint(0, 0xFFFFFF))
     for i, char in enumerate(customer_name):
         fraction = i / max(num_chars - 1, 1)
         interpolated_color = interpolate_color(start_color, end_color, fraction)
         modified_string += f'[{interpolated_color}]{char}'
     return modified_string
 
-# ========================================
-# Funções de Interface do Usuário
-# ========================================
-def banner(console):
-    os.system('cls' if os.name == 'nt' else 'clear')
-
-    # Cores
-    cor_borda = Style(color="rgb(255,0,0)")              # VERMELHO
-    cor_logo  = Style(color="rgb(0,191,255)", bold=True) # AZUL NEON (BH VENDAS)
-    cor_texto = Style(color="rgb(180,200,220)")          # CINZA AZULADO (SUAVE)
-
-    # Desenho do banner
-    banner_lines = [
-        "┌───────────────────────────────────────────────────────┐",
-        "│                                                       │",
-        "│                    ██████╗ ██╗  ██╗                   │", 
-        "│                    ██╔══██╗██║  ██║                   │",
-        "│                    ██████╔╝███████║                   │",
-        "│                    ██╔══██╗██╔══██║                   │",
-        "│                    ██████╔╝██║  ██║                   │",
-        "│                    ╚═════╝ ╚═╝  ╚═╝                   │", 
-        "│  ██╗   ██╗███████╗███╗   ██╗██████╗  █████╗ ███████╗  │",
-        "│  ██║   ██║██╔════╝████╗  ██║██╔══██╗██╔══██╗██╔════╝  │",
-        "│  ██║   ██║█████╗  ██╔██╗ ██║██║  ██║███████║███████╗  │",
-        "│  ╚██╗ ██╔╝██╔══╝  ██║╚██╗██║██║  ██║██╔══██║╚════██║  │",
-        "│   ╚████╔╝ ███████╗██║ ╚████║██████╔╝██║  ██║███████║  │",
-        "│    ╚═══╝  ╚══════╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝╚══════╝  │",     
-        "│                                                       │",
-        "├───────────────────────────────────────────────────────┤",
-        "│DESLOGUE DA CONTA CPM ANTES DE USAR ESTA FERRAMENTA    │",
-        "├───────────────────────────────────────────────────────┤",
-        "│PARA COMPRA UMA KEY ENTRE EM CONTATO PELO TELEGRAM:    │",
-        "│                                                       │",
-        "├──────────────────────────┬────────────────────────────┤",
-        "│INSTAGRAM: @bh_vendas     │É PROIBIDO REVENDER SUA KEY │",
-        "│WHATSAPP: 67 99187-0782   │DE ACESSO OU O SCRIPT       │",
-        "└──────────────────────────┴────────────────────────────┘"
-    ]
-
-    # Símbolos que fazem parte da borda
-    simbolos_borda = "│─┘└┐┌┤├┬┴"
-
-    # Pintando cada caractere conforme sua categoria
-    for line in banner_lines:
-        styled_line = Text()
-        for char in line:
-            if char in simbolos_borda:
-                styled_line.append(char, style=cor_borda)
-            elif "█" in char:
-                styled_line.append(char, style=cor_logo)
-            else:
-                styled_line.append(char, style=cor_texto)
-        console.print(styled_line)
-
-
-    
-def prompt_valid_value(content, tag, password=False):
-    """
-    Solicita entrada do usuário com validação
-    Args:
-        content: Texto a ser exibido no prompt
-        tag: Identificador do campo para mensagens de erro
-        password: Se True, oculta a entrada (para senhas)
-    Returns:
-        Valor válido inserido pelo usuário
-    """
-    while True:
-        value = Prompt.ask(content, password=password)
-        if not value or value.isspace():
-            print(Colorate.Horizontal(Colors.rainbow, f'{tag} não pode estar vazio. Por favor, tente novamente.'))
-        else:
-            return value
-
-# ========================================
-# Funções de Carregamento de Dados
-# ========================================
-def load_player_data(cpm):
-    """Carrega e exibe os dados do jogador"""
-    response = cpm.get_player_data()
-    
-    if response.get('ok'):
-        data = response.get('data')
-        if all(key in data for key in ['floats', 'localID', 'money', 'coin']):
-            print(Colorate.Horizontal(Colors.rainbow, '='*15 + '[ INFORMAÇÕES DO JOGADOR ]' + '='*15))
-            print(Colorate.Horizontal(Colors.rainbow, f'NOME: {(data.get("Name") or "UNDEFINED")}'))
-            print(Colorate.Horizontal(Colors.rainbow, f'ID NO JOGO: {data.get("localID")}'))
-            print(Colorate.Horizontal(Colors.rainbow, f'DINHEIRO: {data.get("money")}'))
-            print(Colorate.Horizontal(Colors.rainbow, f'GOLDS: {data.get("coin")}'))
-        else:
-            print(Colorate.Horizontal(Colors.rainbow, 'ERRO: Contas novas precisam entrar no jogo pelo menos uma vez!'))
-            exit(1)
-    else:
-        print(Colorate.Horizontal(Colors.rainbow, 'ERRO: Seu login não está configurado corretamente!'))
-        exit(1)
-
-def load_key_data(cpm):
-    """Carrega e exibe os dados da chave de acesso"""
-    data = cpm.get_key_data()
-    
-    print(Colorate.Horizontal(Colors.rainbow, '='*15 + '[ DETALHES DA CHAVE DE ACESSO ]' + '='*15))
-    print(Colorate.Horizontal(Colors.rainbow, f'CHAVE DE ACESSO: {data.get("access_key")}'))
-    print(Colorate.Horizontal(Colors.rainbow, f'ID DO TELEGRAM: {data.get("telegram_id")}'))
-    print(Colorate.Horizontal(Colors.rainbow, f'SALDO: {data.get("coins") if not data.get("is_unlimited") else "ILIMITADO"}'))
-
-def load_client_details():
-    """Obtém e exibe informações de localização do cliente"""
-    response = requests.get("http://ip-api.com/json")
-    data = response.json()
-    
-    print(Colorate.Horizontal(Colors.rainbow, '='*15 + '[ LOCALIZAÇÃO ]' + '='*15))
-    print(Colorate.Horizontal(Colors.rainbow, f'IP: {data.get("query")}'))
-    print(Colorate.Horizontal(Colors.rainbow, f'CIDADE: {data.get("city")}, {data.get("regionName")} ({data.get("countryCode")})'))
-    print(Colorate.Horizontal(Colors.rainbow, f'PAÍS: {data.get("country")} - CEP: {data.get("zip")}'))
-    print(Colorate.Horizontal(Colors.rainbow, '='*15 + '[ MENU ]' + '='*15))
-
-# ========================================
-# Programa Principal
-# ========================================
 if __name__ == "__main__":
-    # Configurações iniciais
     console = Console()
-    signal.signal(signal.SIGINT, signal_handler)  # Configura o handler para Ctrl+C
-    
-    # Loop principal de autenticação
+    signal.signal(signal.SIGINT, signal_handler)
     while True:
-        # Exibe o banner e solicita credenciais
         banner(console)
-        acc_email = prompt_valid_value("[bold][?] INSIRA SEU EMAIL[/bold]", "Email")
-        acc_password = prompt_valid_value("[bold][?] INSIRA SUA SENHA[/bold]", "Senha", password=True)
-        acc_access_key = prompt_valid_value("[bold][?] INSIRA SUA CHAVE DE ACESSO[/bold]", "Chave de Acesso")
-        
-        # Tenta fazer login
-        console.print("[bold cyan][%] Tentando login...[/bold cyan]", end="")
+        acc_email = prompt_valid_value("[bold][?] INSIRA SEU EMAIL[/bold]", "Email", password=False)
+        acc_password = prompt_valid_value("[bold][?] INSIRA SUA SENHA[/bold]", "Password", password=False)
+        acc_access_key = prompt_valid_value("[bold][?] INSIRA SUA CHAVE DE ACESSO[/bold]", "Access Key", password=False)
+        console.print("[bold cyan][%] Trying to Login[/bold cyan]: ", end=None)
         cpm = CPMnoelcpm(acc_access_key)
         login_response = cpm.login(acc_email, acc_password)
-        
-        # Processa a resposta do login
         if login_response != 0:
             if login_response == 100:
-                print(Colorate.Horizontal(Colors.rainbow, 'ERRO: Conta não existe!'))
+                print(Colorate.Horizontal(Colors.rainbow, 'ESSA CONTA NAO EXISTE.'))
+                sleep(2)
+                continue
             elif login_response == 101:
-                print(Colorate.Horizontal(Colors.rainbow, 'ERRO: Senha inválida!'))
+                print(Colorate.Horizontal(Colors.rainbow, 'SENHA INVALIDA.'))
+                sleep(2)
+                continue
             elif login_response == 103:
-                print(Colorate.Horizontal(Colors.rainbow, 'ERRO: Chave de acesso inválida!'))
+                print(Colorate.Horizontal(Colors.rainbow, 'CHAVE DE ACESSO INVALIDA.'))
+                sleep(2)
+                continue
             else:
-                print(Colorate.Horizontal(Colors.rainbow, 'ERRO: Tente novamente mais tarde!'))
-                print(Colorate.Horizontal(Colors.rainbow, 'O banco de dados pode estar sobrecarregado!'))
-            sleep(2)
-            continue
+                print(Colorate.Horizontal(Colors.rainbow, 'TENTE NOVAMENTE.'))
+                print(Colorate.Horizontal(Colors.rainbow, '! ATENCAO: BANCO DE DADOS LOTADO, FALE COM O SUPORTE  !.'))
+                sleep(2)
+                continue
         else:
-            print(Colorate.Horizontal(Colors.rainbow, 'SUCESSO: Login realizado!'))
+            print(Colorate.Horizontal(Colors.rainbow, 'SUCESSO.'))
             sleep(2)
-        
-        # Menu principal de serviços
         while True:
             banner(console)
             load_player_data(cpm)
             load_key_data(cpm)
             load_client_details()
+            choices = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26"]
+            print(Colorate.Horizontal(Colors.rainbow, '{01}: ADICIONAR DINHEIRO           1.000K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{02}: ADICIONAR GOLDS              3.500K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{03}: INSERIR RANK KING            4.000K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{04}: MUDAR ID                     3.500K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{05}: MUDAR NOME                   100 '))
+            print(Colorate.Horizontal(Colors.rainbow, '{06}: MUDAR NOME ( RGB )           100'))
+            print(Colorate.Horizontal(Colors.rainbow, '{07}: NUMEROS PLACAS               2.000K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{08}: DELETAR CONTA                GRATIS '))
+            print(Colorate.Horizontal(Colors.rainbow, '{09}: REGISTRAR CONTA              GRATIS'))
+            print(Colorate.Horizontal(Colors.rainbow, '{10}: DELETAR AMIGOS               500'))
+            print(Colorate.Horizontal(Colors.rainbow, '{11}: DESBLOQUEAR CARROS PAGOS     4.000K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{12}: DESBLOQUEAR TODOS CARROS     3.000K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{13}: SIRENE EM TODOS CARROS       2.000K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{14}: DESBLOQUEAR W16              3.000K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{15}: DESBLOQUEAR BUZINAS          3.000K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{16}: MOTOR NAO QUEBRA             2.000K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{17}: GASOLINA INFINITA            2.000K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{18}: DESBLOQUEAR CASA 3           3.500K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{19}: DESBLOQUEAR FUMACA           2.000K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{20}: DESBLOQUEAR ANIMAÇÕES        2.000K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{21}: DESBLOQUEAR RODAS            4.000K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{22}: DESBLOQUEAR ROUPAS MASCULINAS 3.000K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{23}: DESBLOQUEAR ROUPAS FEMININAS  3.000K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{24}: ALTERAR CORRIDAS GANHAS      1.000K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{25}: ALTERAR CORRIDAS PERDIDAS    1.000K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{26}: CLONAR CONTA                 5.000K'))
+            print(Colorate.Horizontal(Colors.rainbow, '{0} : SAIR'))
             
-            # Exibe o menu de opções
-            choices = [str(i) for i in range(27)]  # 0-26
-           def exibir_menu_principal(console):
-    opcoes = [
-        ("01", "ADICIONAR DINHEIRO", "1.000K"),
-        ("02", "ADICIONAR GOLDS", "3.500K"),
-        ("03", "INSERIR RANK KING", "4.000K"),
-        ("04", "MUDAR ID", "3.500K"),
-        ("05", "MUDAR NOME", "100"),
-        ("06", "MUDAR NOME (RGB)", "100"),
-        ("07", "NUMEROS PLACAS", "2.000K"),
-        ("08", "DELETAR CONTA", "GRÁTIS"),
-        ("09", "REGISTRAR CONTA", "GRÁTIS"),
-        ("10", "DELETAR AMIGOS", "500"),
-        ("11", "DESBLOQUEAR CARROS PAGOS", "4.000K"),
-        ("12", "DESBLOQUEAR TODOS CARROS", "3.000K"),
-        ("13", "SIRENE EM TODOS CARROS", "2.000K"),
-        ("14", "DESBLOQUEAR W16", "3.000K"),
-        ("15", "DESBLOQUEAR BUZINAS", "3.000K"),
-        ("16", "MOTOR NAO QUEBRA", "2.000K"),
-        ("17", "GASOLINA INFINITA", "2.000K"),
-        ("18", "DESBLOQUEAR CASA 3", "3.500K"),
-        ("19", "DESBLOQUEAR FUMAÇA", "2.000K"),
-        ("20", "DESBLOQUEAR ANIMAÇÕES", "2.000K"),
-        ("21", "DESBLOQUEAR RODAS", "4.000K"),
-        ("22", "ROUPAS MASCULINAS", "3.000K"),
-        ("23", "ROUPAS FEMININAS", "3.000K"),
-        ("24", "ALTERAR CORRIDAS GANHAS", "1.000K"),
-        ("25", "ALTERAR CORRIDAS PERDIDAS", "1.000K"),
-        ("26", "CLONAR CONTA", "5.000K"),
-        ("00", "SAIR", ""),
-    ]
-
-    estilo_num = Style(color="rgb(50,255,100)", bold=True)        # Verde limão
-    estilo_nome = Style(color="rgb(0,191,255)")                   # Azul neon
-    estilo_valor = Style(color="rgb(255,215,0)")                  # Dourado
-    estilo_borda = Style(color="rgb(255,0,0)")                    # Vermelho
-    estilo_titulo = Style(color="rgb(180,200,220)", bold=True)   # Cinza azulado
-
-    topo = "┌" + "─" * 55 + "┐"
-    base = "└" + "─" * 55 + "┘"
-    console.print(Text(topo, style=estilo_borda))
-    console.print(Text("│{:^55}│".format("MENU PRINCIPAL - BH VENDAS"), style=estilo_borda))
-    console.print(Text("├" + "─" * 55 + "┤", style=estilo_borda))
-
-    for cod, nome, valor in opcoes:
-        linha = Text("│ ", style=estilo_borda)
-        linha.append(cod, style=estilo_num)
-        linha.append(": ", style=estilo_borda)
-        linha.append(nome, style=estilo_nome)
-        if valor:
-            linha.append(f" ({valor})", style=estilo_valor)
-        espaço_final = 55 - (len(cod) + len(nome) + len(valor) + 4)
-        linha.append(" " * max(espaço_final, 0), style=estilo_borda)
-        linha.append("│", style=estilo_borda)
-        console.print(linha)
-
-    console.print(Text(base, style=estilo_borda))
-
+            print(Colorate.Horizontal(Colors.rainbow, '===============[ 𝐂𝐏𝐌☆ ]==============='))
             
-            # Obtém a seleção do usuário
-            service = IntPrompt.ask(
-                "[bold][?] SELECIONE UM SERVIÇO [red][1-26 ou 0][/red][/bold]", 
-                choices=choices, 
-                show_choices=False
-            )
-            print(Colorate.Horizontal(Colors.rainbow, '='*15 + '[ CPM☆ ]' + '='*15))
+            service = IntPrompt.ask(f"[bold][?] SELECIONE UM SERVICO [red][1-{choices[-1]} or 0][/red][/bold]", choices=choices, show_choices=False)
             
-            # Processa a seleção do serviço
-            if service == 0:  # Sair
-                print(Colorate.Horizontal(Colors.rainbow, f'Volte sempre! @{__CHANNEL_USERNAME__}'))
-                break
-                
-            elif service == 1:  # Adicionar dinheiro
-                print(Colorate.Horizontal(Colors.rainbow, '[?] QUANTIDADE DE DINHEIRO PARA ADICIONAR:'))
-                amount = IntPrompt.ask("[?] QUANTIDADE", min=1, max=999999999)
-                
-                console.print("[%] PROCESSANDO...", end="")
-                if cpm.set_player_money(amount):
-                    print(Colorate.Horizontal(Colors.rainbow, 'SUCESSO: Dinheiro adicionado!'))
-                    if Prompt.ask("[?] SAIR? (Y/N)", choices=["y", "n"], default="n") == "y":
-                        break
+            print(Colorate.Horizontal(Colors.rainbow, '===============[ 𝐂𝐏𝐌☆ ]==============='))
+            
+            if service == 0: # Exit
+                print(Colorate.Horizontal(Colors.rainbow, f'VOLTE SEMPRE....: @{__CHANNEL_USERNAME__}.'))
+            elif service == 1: # Increase Money
+                print(Colorate.Horizontal(Colors.rainbow, '[?] INSIRA A QUANTIDADE DE DINHEIRO QUE DESEJA ADICIONAR .'))
+                amount = IntPrompt.ask("[?] QUANTIDADE")
+                console.print("[%] SALVANDO DADOS: ", end=None)
+                if amount > 0 and amount <= 999999999:
+                    if cpm.set_player_money(amount):
+                        print(Colorate.Horizontal(Colors.rainbow, 'SUCESSO'))
+                        print(Colorate.Horizontal(Colors.rainbow, '======================================'))
+                        answ = Prompt.ask("[?] DESEJA SAIR ? USE  Y PARA SIM E N PARA NAO ", choices=["y", "n"], default="n")
+                        if answ == "y": print(Colorate.Horizontal(Colors.rainbow, f' VOLTE SEMPRE : @{__CHANNEL_USERNAME__}.'))
+                        else: continue
+                    else:
+                        print(Colorate.Horizontal(Colors.rainbow, 'FALHA.'))
+                        print(Colorate.Horizontal(Colors.rainbow, 'TENTE NOVAMENTE.'))
+                        sleep(2)
+                        continue
                 else:
-                    print(Colorate.Horizontal(Colors.rainbow, 'ERRO: Falha ao adicionar dinheiro!'))
+                    print(Colorate.Horizontal(Colors.rainbow, 'FALHA .'))
+                    print(Colorate.Horizontal(Colors.rainbow, 'ULTILIZE VALORES VALIDOS.'))
                     sleep(2)
-            elif service == 2:  # Adicionar Golds
-                print(Colorate.Horizontal(Colors.rainbow, '[?] QUANTIDADE DE GOLDS PARA ADICIONAR:'))
-                amount = IntPrompt.ask("[?] QUANTIDADE", min=1, max=999999999)
-                
-                console.print("[%] PROCESSANDO...", end="")
-                if cpm.set_player_coins(amount):
-                    print(Colorate.Horizontal(Colors.rainbow, 'SUCESSO: Golds adicionados!'))
-                    if Prompt.ask("[?] SAIR? (Y/N)", choices=["y", "n"], default="n") == "y":
-                        break
+                    continue
+            elif service == 2: # Increase Coins
+                print(Colorate.Horizontal(Colors.rainbow, '[?] INSIRA A QUANTIDADE DE GOLDS QUE DESEJA ADICIONAR.'))
+                amount = IntPrompt.ask("[?] QUANTIDADE")
+                console.print("[%] SALVANDO DADOS: ", end=None)
+                if amount > 0 and amount <= 999999999:
+                    if cpm.set_player_coins(amount):
+                        print(Colorate.Horizontal(Colors.rainbow, 'SUCESSO'))
+                        print(Colorate.Horizontal(Colors.rainbow, '======================================'))
+                        answ = Prompt.ask("[?] DESEJA SAIR ? USE  Y PARA SIM E N PARA NAO ", choices=["y", "n"], default="n")
+                        if answ == "y": print(Colorate.Horizontal(Colors.rainbow, f' VOLTE SEMPRE : @{__CHANNEL_USERNAME__}.'))
+                        else: continue
+                    else:
+                        print(Colorate.Horizontal(Colors.rainbow, 'FALHA.'))
+                        print(Colorate.Horizontal(Colors.rainbow, 'TENTE NOVAMENTE.'))
+                        sleep(2)
+                        continue
                 else:
-                    print(Colorate.Horizontal(Colors.rainbow, 'ERRO: Falha ao adicionar golds!'))
+                    print(Colorate.Horizontal(Colors.rainbow, 'FALHA.'))
+                    print(Colorate.Horizontal(Colors.rainbow, 'USE VALORES VALIDOS.'))
                     sleep(2)
-
-            elif service == 3:  # Inserir Rank King
-                console.print("[!] ATENÇÃO: Se o King não aparecer, saia e abra o jogo algumas vezes.", end="")
-                console.print("[!] NÃO DESBLOQUEIE O KING NA MESMA CONTA DUAS VEZES.", end="")
+                    continue
+            elif service == 3: # King Rank
+                console.print("[bold red][!] ATENCAO:[/bold red]: SE O KING NAO APARECER, SAIA E ABRA O JOGO ALGUMAS VEZES.", end=None)
+                console.print("[bold red][!] ATENCAO:[/bold red]: POR FAVOR NAO DESBLOQUIE O KING NA MESMA CONTA DUAS VEZES.", end=None)
                 sleep(2)
-                
-                console.print("[%] ADICIONANDO RANK KING...", end="")
+                console.print("[%] ADICIONANDO O KING NA SUA CONTA: ", end=None)
                 if cpm.set_player_rank():
-                    print(Colorate.Horizontal(Colors.rainbow, 'SUCESSO: Rank King adicionado!'))
-                    if Prompt.ask("[?] SAIR? (Y/N)", choices=["y", "n"], default="n") == "y":
-                        break
+                    print(Colorate.Horizontal(Colors.rainbow, 'SUCESSO'))
+                    print(Colorate.Horizontal(Colors.rainbow, '======================================'))
+                    
+                    print(Colorate.Horizontal(Colors.rainbow, '======================================'))
+                    answ = Prompt.ask("[?] DESEJA SAIR ? USE Y PARA SIM E N PARA NAO ?", choices=["y", "n"], default="n")
+                    if answ == "y": print(Colorate.Horizontal(Colors.rainbow, f'VOLTE SEMPRE....: @{__CHANNEL_USERNAME__}.'))
+                    else: continue
                 else:
-                    print(Colorate.Horizontal(Colors.rainbow, 'ERRO: Falha ao adicionar rank!'))
+                    print(Colorate.Horizontal(Colors.rainbow, 'FALHA.'))
+                    print(Colorate.Horizontal(Colors.rainbow, 'TENTE NOVAMENTE.'))
                     sleep(2)
-
-            elif service == 4:  # Mudar ID
-                print(Colorate.Horizontal(Colors.rainbow, '[?] INSIRA O NOVO ID:'))
-                new_id = Prompt.ask("[?] NOVO ID").upper()
-                
-                console.print("[%] PROCESSANDO...", end="")
-                if len(new_id) > 0 and ' ' not in new_id:
-                    if cpm.set_player_localid(new_id):
-                        print(Colorate.Horizontal(Colors.rainbow, 'SUCESSO: ID alterado!'))
-                        if Prompt.ask("[?] SAIR? (Y/N)", choices=["y", "n"], default="n") == "y":
-                            break
+                    continue
+            elif service == 4: # Change ID
+                print(Colorate.Horizontal(Colors.rainbow, '[?] INSIRA SEU NOVO ID.'))
+                new_id = Prompt.ask("[?] ID")
+                console.print("[%] SALVANDO DADOS: ", end=None)
+                if len(new_id) >= 0 and len(new_id) <= 999999999 and (' ' in new_id) == False:
+                    if cpm.set_player_localid(new_id.upper()):
+                        print(Colorate.Horizontal(Colors.rainbow, 'SUCESSO'))
+                        print(Colorate.Horizontal(Colors.rainbow, '======================================'))
+                        answ = Prompt.ask("[?] DESEJA SAIR ? USE  Y PARA SIM E N PARA NAO ", choices=["y", "n"], default="n")
+                        if answ == "y": print(Colorate.Horizontal(Colors.rainbow, f' VOLTE SEMPRE : @{__CHANNEL_USERNAME__}.'))
+                        else: continue
                     else:
-                        print(Colorate.Horizontal(Colors.rainbow, 'ERRO: ID já em uso!'))
+                        print(Colorate.Horizontal(Colors.rainbow, 'FALHA.'))
+                        print(Colorate.Horizontal(Colors.rainbow, 'TENTE NOVAMENTE.'))
+                        sleep(2)
+                        continue
                 else:
-                    print(Colorate.Horizontal(Colors.rainbow, 'ERRO: ID inválido!'))
-                sleep(2)
-
-            elif service == 5:  # Mudar Nome
-                print(Colorate.Horizontal(Colors.rainbow, '[?] INSIRA O NOVO NOME:'))
-                new_name = Prompt.ask("[?] NOME")
-                
-                console.print("[%] PROCESSANDO...", end="")
-                if cpm.set_player_name(new_name):
-                    print(Colorate.Horizontal(Colors.rainbow, 'SUCESSO: Nome alterado!'))
-                    if Prompt.ask("[?] SAIR? (Y/N)", choices=["y", "n"], default="n") == "y":
-                        break
-                else:
-                    print(Colorate.Horizontal(Colors.rainbow, 'ERRO: Falha ao alterar nome!'))
+                    print(Colorate.Horizontal(Colors.rainbow, 'FALHA.'))
+                    print(Colorate.Horizontal(Colors.rainbow, 'ESSE ID JA ESTA EM USO TENTE OUTRO.'))
                     sleep(2)
-
-            elif service == 6:  # Mudar Nome (RGB)
-                print(Colorate.Horizontal(Colors.rainbow, '[?] INSIRA O NOVO NOME (EFEITO RGB):'))
+                    continue
+            elif service == 5: # Change Name
+                print(Colorate.Horizontal(Colors.rainbow, '[?] INSIRA SEU NOVO NOME.'))
                 new_name = Prompt.ask("[?] NOME")
-                
-                console.print("[%] PROCESSANDO...", end="")
-                if cpm.set_player_name(rainbow_gradient_string(new_name)):
-                    print(Colorate.Horizontal(Colors.rainbow, 'SUCESSO: Nome RGB aplicado!'))
-                    if Prompt.ask("[?] SAIR? (Y/N)", choices=["y", "n"], default="n") == "y":
-                        break
+                console.print("[%] SALVANDO DADOS: ", end=None)
+                if len(new_name) >= 0 and len(new_name) <= 999999999:
+                    if cpm.set_player_name(new_name):
+                        print(Colorate.Horizontal(Colors.rainbow, 'SUCESSO'))
+                        print(Colorate.Horizontal(Colors.rainbow, '======================================'))
+                        answ = Prompt.ask("[?] DESEJA SAIR ? USE  Y PARA SIM E N PARA NAO ", choices=["y", "n"], default="n")
+                        if answ == "y": print(Colorate.Horizontal(Colors.rainbow, f' VOLTE SEMPRE : @{__CHANNEL_USERNAME__}.'))
+                        else: continue
+                    else:
+                        print(Colorate.Horizontal(Colors.rainbow, 'FALHA.'))
+                        print(Colorate.Horizontal(Colors.rainbow, 'TENTE NOVAMENTE.'))
+                        sleep(2)
+                        continue
                 else:
-                    print(Colorate.Horizontal(Colors.rainbow, 'ERRO: Falha ao aplicar efeito!'))
+                    print(Colorate.Horizontal(Colors.rainbow, 'FALHA.'))
+                    print(Colorate.Horizontal(Colors.rainbow, 'USE VALORES VALIDOS.'))
                     sleep(2)
-
-            elif service == 7:  # Números em Placas
-                console.print("[%] ADICIONANDO NÚMEROS NAS PLACAS...", end="")
+                    continue
+            elif service == 6: # Change Name Rainbow
+                print(Colorate.Horizontal(Colors.rainbow, '[?] INSIRA SEU NOVO NOME ( RGB ).'))
+                new_name = Prompt.ask("[?] NOME")
+                console.print("[%] SALVANDO DADOS: ", end=None)
+                if len(new_name) >= 0 and len(new_name) <= 999999999:
+                    if cpm.set_player_name(rainbow_gradient_string(new_name)):
+                        print(Colorate.Horizontal(Colors.rainbow, 'SUCESSO'))
+                        print(Colorate.Horizontal(Colors.rainbow, '======================================'))
+                        answ = Prompt.ask("[?] DESEJA SAIR ? USE  Y PARA SIM E N PARA NAO ", choices=["y", "n"], default="n")
+                        if answ == "y": print(Colorate.Horizontal(Colors.rainbow, f' VOLTE SEMPRE : @{__CHANNEL_USERNAME__}.'))
+                        else: continue
+                    else:
+                        print(Colorate.Horizontal(Colors.rainbow, 'FALHA.'))
+                        print(Colorate.Horizontal(Colors.rainbow, 'TENTE NOVAMENTE.'))
+                        sleep(2)
+                        continue
+                else:
+                    print(Colorate.Horizontal(Colors.rainbow, 'FALHA.'))
+                    print(Colorate.Horizontal(Colors.rainbow, 'USE VALORES VALIDOS.'))
+                    sleep(2)
+                    continue
+            elif service == 7: # Number Plates
+                console.print("[%] ADICIONANDO NUMERO AS PLACAS: ", end=None)
                 if cpm.set_player_plates():
-                    print(Colorate.Horizontal(Colors.rainbow, 'SUCESSO: Placas modificadas!'))
-                    if Prompt.ask("[?] SAIR? (Y/N)", choices=["y", "n"], default="n") == "y":
-                        break
+                    print(Colorate.Horizontal(Colors.rainbow, 'SUCESSO'))
+                    print(Colorate.Horizontal(Colors.rainbow, '======================================'))
+                    answ = Prompt.ask("[?] DESEJA SAIR ? USE Y PARA SIM E N PARA NAO ?", choices=["y", "n"], default="n")
+                    if answ == "y": print(Colorate.Horizontal(Colors.rainbow, f'VOLTR SEMPRE....: @{__CHANNEL_USERNAME__}.'))
+                    else: continue
                 else:
-                    print(Colorate.Horizontal(Colors.rainbow, 'ERRO: Falha ao modificar placas!'))
+                    print(Colorate.Horizontal(Colors.rainbow, 'FALHA.'))
+                    print(Colorate.Horizontal(Colors.rainbow, 'TENTE NOVAMENTE.'))
                     sleep(2)
-
-            elif service == 8:  # Deletar Conta
-                print(Colorate.Horizontal(Colors.rainbow, '[!] ATENÇÃO: ESTA AÇÃO É IRREVERSÍVEL!'))
-                confirm = Prompt.ask("[?] CONFIRMAR DELETAR CONTA? (Y/N)", choices=["y", "n"], default="n")
-                
-                if confirm == "y":
-                    console.print("[%] DELETANDO CONTA...", end="")
-                    if cpm.delete():
-                        print(Colorate.Horizontal(Colors.rainbow, 'SUCESSO: Conta deletada!'))
-                        break
-                    else:
-                        print(Colorate.Horizontal(Colors.rainbow, 'ERRO: Falha ao deletar conta!'))
-                
+                    continue
+            elif service == 8: # Account

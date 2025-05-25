@@ -332,18 +332,20 @@ from rich.style import Style
 
 def print_menu_line(line):
     """
-    Imprime linhas formatadas do menu com padrão consistente
+    Imprime linhas formatadas do menu com cores invertidas:
+    - Números/títulos em BRANCO
+    - Texto/valores em CIANO CLARO
     """
-    # Cores padronizadas conforme load_key_data
-    ciano = Style(color="#00ced1")               # Ciano para rótulos
+    # Cores ajustadas conforme solicitado
+    ciano = Style(color="#00ced1")               # Ciano para texto/valores
     azul_escuro = Style(color="#000080")         # Azul escuro para símbolos
-    ciano_escuro = Style(color="#008b8b")        # Ciano escuro para títulos
-    white = Style(color="white")                 # Branco para valores
+    white = Style(color="white")                 # Branco para números/títulos
+    ciano_escuro = Style(color="#008b8b")        # Ciano escuro para títulos de seção
 
     console = Console()
     try:
         if line.startswith('{') and ':' in line:
-            # Para itens de menu (rótulo ciano, valor branco)
+            # Itens de menu: número em branco, texto/valor em ciano
             num_part, rest = line.split(':', 1)
 
             if any(c.isdigit() for c in rest.split()[-1]):
@@ -351,23 +353,23 @@ def print_menu_line(line):
                 if len(parts) == 2:
                     text_part, price_part = parts
                     styled_line = Text()
-                    styled_line.append(f"{num_part}:", style=ciano)
-                    styled_line.append(text_part, style=white)
-                    styled_line.append(f" {price_part}", style="bright_black")
+                    styled_line.append(f"{num_part}:", style=white)  # Número em branco
+                    styled_line.append(text_part, style=ciano)      # Texto em ciano
+                    styled_line.append(f" {price_part}", style=ciano)  # Valor em ciano
                     console.print(styled_line)
                 else:
                     styled_line = Text()
-                    styled_line.append(f"{num_part}:", style=ciano)
-                    styled_line.append(rest, style="bright_black")
+                    styled_line.append(f"{num_part}:", style=white)  # Número em branco
+                    styled_line.append(rest, style=ciano)            # Resto em ciano
                     console.print(styled_line)
             else:
                 styled_line = Text()
-                styled_line.append(f"{num_part}:", style=ciano)
-                styled_line.append(rest, style=white)
+                styled_line.append(f"{num_part}:", style=white)      # Número em branco
+                styled_line.append(rest, style=ciano)               # Texto em ciano
                 console.print(styled_line)
 
         elif line.startswith('=') or line.startswith('[') or line.startswith('─'):
-            # Linhas de separação padronizadas (como em load_key_data)
+            # Linhas de separação (mesmo padrão original)
             title_line = Text()
             for char in line:
                 if char in ['=', '[', ']', '─']:
@@ -377,10 +379,12 @@ def print_menu_line(line):
             console.print(title_line)
 
         else:
-            console.print(line, style=white)
+            console.print(line, style=ciano)  # Linhas genéricas em ciano
 
     except Exception:
-        console.print(line, style=white)
+        console.print(line, style=ciano)  # Fallback para ciano
+
+
 
 if __name__ == "__main__":
     console = Console()

@@ -416,7 +416,8 @@ if __name__ == "__main__":
             sleep(2)
         while True:
             os.system('cls' if os.name == 'nt' else 'clear')
-            banner_painel(console)  # Banner simplificado
+            banner_painel(console)# Banner simplificado
+            console.print()
             load_player_data(cpm)
             load_key_data(cpm)
             load_client_details()

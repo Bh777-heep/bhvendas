@@ -105,7 +105,37 @@ def banner(console):
         console.print(styled_line)
 
 
+def banner_painel(console):
+    """Banner simplificado para o painel de opções (apenas 'BH VENDAS')"""
+    # Cores originais do banner
+    cor_logo = Style(color="#000080", bgcolor="white")  # Azul naval com fundo branco
+    cor_texto = Style(color="white")                   # Texto principal
 
+    # Banner reduzido (apenas o logo BH VENDAS)
+    bh_vendas_lines = [
+        "                     ██████╗ ██╗  ██╗                      ",
+        "                     ██╔══██╗██║  ██║                      ",
+        "                     ██████╔╝███████║                      ",
+        "                     ██╔══██╗██╔══██║                      ",
+        "                     ██████╔╝██║  ██║                      ",
+        "                     ╚═════╝ ╚═╝  ╚═╝                      ",
+        "    ██╗   ██╗███████╗███╗   ██╗██████╗  █████╗ ███████╗    ",
+        "    ██║   ██║██╔════╝████╗  ██║██╔══██╗██╔══██╗██╔════╝    ",
+        "    ██║   ██║█████╗  ██╔██╗ ██║██║  ██║███████║███████╗    ",
+        "    ╚██╗ ██╔╝██╔══╝  ██║╚██╗██║██║  ██║██╔══██║╚════██║    ",
+        "     ╚████╔╝ ███████╗██║ ╚████║██████╔╝██║  ██║███████║    ",
+        "      ╚═══╝  ╚══════╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝╚══════╝    "
+    ]
+
+    # Renderização (mantendo as cores originais)
+    for line in bh_vendas_lines:
+        styled_line = Text()
+        for char in line:
+            if char == '█':
+                styled_line.append(char, style=cor_logo)  # Logo em azul naval
+            else:
+                styled_line.append(char, style=cor_texto) # Texto em branco
+        console.print(styled_line)
 
 def load_player_data(cpm):
     response = cpm.get_player_data()
@@ -386,6 +416,7 @@ if __name__ == "__main__":
             sleep(2)
         while True:
             os.system('cls' if os.name == 'nt' else 'clear')
+            banner_painel(console)  # Banner simplificado
             load_player_data(cpm)
             load_key_data(cpm)
             load_client_details()

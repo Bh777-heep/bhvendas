@@ -13,8 +13,8 @@ from pystyle import Colors, Colorate
 
 from noelcpm import CPMnoelcpm
 
-__CHANNEL_USERNAME__ = "@noel_vendas"
-__GROUP_USERNAME__   = "11978458163"
+__CHANNEL_USERNAME__ = "@bh_vendas"
+__GROUP_USERNAME__   = "67 991870782"
 
 def signal_handler(sig, frame):
     print("\n Bye Bye...")

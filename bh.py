@@ -329,47 +329,48 @@ def rainbow_gradient_string(customer_name):
 from rich.console import Console
 from rich.text import Text
 from rich.style import Style
-
 def print_menu_line(line):
     """
-    Imprime linhas formatadas do menu com cores invertidas:
+    Imprime linhas formatadas do menu com:
     - Números/títulos em BRANCO
-    - Texto/valores em CIANO CLARO
+    - Texto em CIANO CLARO
+    - Valores em K em DOURADO (#FFD700)
     """
-    # Cores ajustadas conforme solicitado
-    ciano = Style(color="#00ced1")               # Ciano para texto/valores
-    azul_escuro = Style(color="#000080")         # Azul escuro para símbolos
-    white = Style(color="white")                 # Branco para números/títulos
-    ciano_escuro = Style(color="#008b8b")        # Ciano escuro para títulos de seção
+    # Definição de cores
+    ciano = Style(color="#00ced1")               # Texto principal
+    dourado = Style(color="#FFD700")             # Valores em K (ex: 1.000K)
+    white = Style(color="white")                 # Números dos itens
+    azul_escuro = Style(color="#000080")         # Símbolos (=, [, etc.)
+    ciano_escuro = Style(color="#008b8b")        # Títulos de seção
 
     console = Console()
     try:
         if line.startswith('{') and ':' in line:
-            # Itens de menu: número em branco, texto/valor em ciano
+            # Itens de menu (ex: {01}: ADICIONAR DINHEIRO 1.000K)
             num_part, rest = line.split(':', 1)
 
-            if any(c.isdigit() for c in rest.split()[-1]):
+            if any(c.isdigit() for c in rest.split()[-1]):  # Verifica se tem valor numérico no final
                 parts = rest.rsplit(maxsplit=1)
                 if len(parts) == 2:
                     text_part, price_part = parts
                     styled_line = Text()
-                    styled_line.append(f"{num_part}:", style=white)  # Número em branco
-                    styled_line.append(text_part, style=ciano)      # Texto em ciano
-                    styled_line.append(f" {price_part}", style=ciano)  # Valor em ciano
+                    styled_line.append(f"{num_part}:", style=white)      # Número em branco
+                    styled_line.append(text_part, style=ciano)           # Texto em ciano
+                    styled_line.append(f" {price_part}", style=dourado)  # Valor em dourado
                     console.print(styled_line)
                 else:
                     styled_line = Text()
-                    styled_line.append(f"{num_part}:", style=white)  # Número em branco
-                    styled_line.append(rest, style=ciano)            # Resto em ciano
+                    styled_line.append(f"{num_part}:", style=white)      # Número em branco
+                    styled_line.append(rest, style=ciano)                # Texto em ciano
                     console.print(styled_line)
             else:
                 styled_line = Text()
-                styled_line.append(f"{num_part}:", style=white)      # Número em branco
-                styled_line.append(rest, style=ciano)               # Texto em ciano
+                styled_line.append(f"{num_part}:", style=white)          # Número em branco
+                styled_line.append(rest, style=ciano)                   # Texto em ciano
                 console.print(styled_line)
 
         elif line.startswith('=') or line.startswith('[') or line.startswith('─'):
-            # Linhas de separação (mesmo padrão original)
+            # Linhas de separação (ex: --- [ MENU ]---)
             title_line = Text()
             for char in line:
                 if char in ['=', '[', ']', '─']:
@@ -382,9 +383,7 @@ def print_menu_line(line):
             console.print(line, style=ciano)  # Linhas genéricas em ciano
 
     except Exception:
-        console.print(line, style=ciano)  # Fallback para ciano
-
-
+        console.print(line, style=ciano)  # Fallback para ciano em caso de erro
 
 if __name__ == "__main__":
     console = Console()

@@ -237,9 +237,9 @@ def load_key_data(cpm):
     for label, value in infos:
         line = Text()
         # Adiciona o rótulo em ciano
-        line.append(f"{label}: ", ciano)
+        line.append(f"{label}: ", white)
         # Adiciona o valor em branco (garantindo que é string)
-        line.append(str(value), white)
+        line.append(str(value), ciano)
         console.print(line)
 
 
@@ -292,8 +292,8 @@ def load_client_details():
 
     for label, value in infos:
         line = Text()
-        line.append(f"{label}: ", ciano)        # Rótulo em ciano
-        line.append(str(value), white)          # Valor em branco
+        line.append(f"{label}: ", white)        # Rótulo em ciano
+        line.append(str(value), ciano)          # Valor em branco
         console.print(line)
 
     # Título Menu (símbolos azul escuro, texto ciano escuro)

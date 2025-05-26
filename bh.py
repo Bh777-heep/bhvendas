@@ -174,10 +174,10 @@ def load_player_data(cpm):
 
             for label, value in infos:
                 line = Text()
-                # Adiciona o rótulo em ciano
-                line.append(f"{label}: ", ciano)
-                # Adiciona o valor em branco
-                line.append(str(value), white)
+                # Adiciona o rótulo em branco
+                line.append(f"{label}: ", white)
+                # Adiciona o valor em ciano
+                line.append(str(value), ciano)
                 console.print(line)
 
         else:
